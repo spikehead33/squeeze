@@ -196,7 +196,6 @@ impl Compressor for HuffmanCompressor {
         }
 
         if !buffer.is_empty() {
-            println!("{:?}", buffer);
             return Err(Self::Error::UncompressionBufferNotEmpty);
         }
         
