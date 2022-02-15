@@ -161,7 +161,6 @@ impl Compressor for HuffmanCompressor {
                 .take(cb_size as usize)
                 .chunks(2)
         {
-            // code_length_table.insert(k, v);
             if let &[&symbol, &code_length] = chunk.collect::<Vec<_>>().as_slice() {
                 code_length_table.insert(symbol, code_length);
             };
@@ -243,10 +242,14 @@ impl TryFrom<SymbolFrequencyTable> for HuffmanTree {
                 .pop()
                 .ok_or(Self::Error::HuffmanTreeCreation)?;
 
-            heap.push(Reverse(HuffmanTree::Tree(
-                smaller.frequency() + bigger.frequency(), 
-                Box::new(smaller), 
-                Box::new(bigger)))
+            heap.push(
+                Reverse(
+                    HuffmanTree::Tree(
+                        smaller.frequency() + bigger.frequency(), 
+                        Box::new(smaller), 
+                        Box::new(bigger)
+                    )
+                )
             );
         }
 
