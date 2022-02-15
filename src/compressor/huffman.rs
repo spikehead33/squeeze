@@ -8,6 +8,7 @@ use std::{
 };
 use super::Compressor;
 
+
 /// This is the only struct expose to the public
 pub struct HuffmanCompressor;
 
@@ -119,7 +120,6 @@ fn header(table: &CodeLengthTable, npad: u8) -> Vec<u8> {
                 .flat_map(|(&a, &b)| [a, b])
                 .collect();
 
-    
     header.push(npad);
     header.append(&mut cb_size);
     header.append(&mut cb);
