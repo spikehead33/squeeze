@@ -1,6 +1,5 @@
-use std::fs::read;
 use std::env;
-
+use std::fs::read;
 
 use squeeze::compressor::Compressor;
 
@@ -14,5 +13,10 @@ fn text_compression_test() {
     let data = text_data();
     let huffman = squeeze::compressor::huffman::HuffmanCompressor;
 
-    assert_eq!(data, huffman.uncompress(huffman.compress(&data).as_ref().unwrap()).unwrap());
+    assert_eq!(
+        data,
+        huffman
+            .uncompress(huffman.compress(&data).as_ref().unwrap())
+            .unwrap()
+    );
 }

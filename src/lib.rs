@@ -1,6 +1,4 @@
 pub mod compressor;
-pub mod model;
-
 
 #[cfg(test)]
 mod tests {

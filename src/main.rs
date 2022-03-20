@@ -1,10 +1,9 @@
-// pub mod compressor;
-// pub mod model;
-// mod cli;
+mod cli;
+mod compressor;
 
-// fn main() {
-//     let args = cli.parse();
-// }
+use clap::Parser;
+
 
 fn main() {
+    let args = cli::Args::parse();
 }
