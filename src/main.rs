@@ -26,10 +26,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
         ou_base_name
     };
 
-    let symbols = match read_file_vec(args.input) {
-        Ok(bytes) => bytes,
-        Err(e) => return Err(e)
-    };
+    let symbols = read_file_vec(args.input)?;
 
     let cli::Compressors(compressors) = args.compressors;
 
@@ -44,9 +41,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
 
     match result {
         Ok(data) => {
-            std::fs::write(oufile_path, data).or_else(|e| {
-                return Err(Box::new(e))
-            });
+            std::fs::write(oufile_path, data)?;
             Ok(())
         },
         Err(e) => Err(Box::new(e))
