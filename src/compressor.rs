@@ -10,6 +10,17 @@ pub trait Compressor {
         -> Result<Vec<u8>, CompressorRuntimeError>;
 }
 
-
 #[derive(Debug)]
 pub struct CompressorRuntimeError(String);
+
+impl std::fmt::Display for CompressorRuntimeError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f,"{}", self.0)
+    }
+}
+
+impl std::error::Error for CompressorRuntimeError {
+    fn description(&self) -> &str {
+        &self.0
+    }
+}

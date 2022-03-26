@@ -44,10 +44,6 @@ fn code_length_table(input: &[RawSymbol]) -> Result<CodeLengthTable, CompressorR
 
 /// Use the CodeBook to compress the input content
 fn apply_codebook(input: &[RawSymbol], cb: &CodeBook) -> BitVec {
-    // let f = BitVec::from_iter(
-    //     input.iter()
-    //          .map(|symbol| cb.0.get(symbol).unwrap().clone())
-    // );
     let mut bitvec = BitVec::new();
     input
         .iter()
@@ -134,7 +130,7 @@ impl Compressor for HuffmanCompressor {
                 content.push(
                     *rcb.0
                         .get(&buffer)
-                        .ok_or(CompressorRuntimeError(String::from("")))?,
+                        .ok_or_else(|| CompressorRuntimeError(String::from("")))?,
                 );
                 buffer.truncate(0);
             }

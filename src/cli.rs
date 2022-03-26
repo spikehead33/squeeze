@@ -1,24 +1,54 @@
-use super::compressor::Compressor;
+use super::compressor;
 
-
-#[derive(clap::Parser, Debug)]
+#[derive(clap::Parser)]
 #[clap(author, version, about, long_about = None)]
-pub struct Args {
+pub struct Cli {
     /// input file path
     #[clap(short, long)]
     #[clap(parse(from_os_str))]
-    input: std::path::PathBuf,
+    pub input: std::path::PathBuf,
 
     /// input file path
     #[clap(short, long)]
     #[clap(parse(from_os_str))]
-    output: std::path::PathBuf,
-
-    /// compression algorithms; separate by spaces if pipelining compressors
-    // #[clap(short, long)]
-    // compressors: Vec<Box<dyn Compressor>>,
+    pub output: Option<std::path::PathBuf>,
 
     /// uncompress mode
     #[clap(short = 'u', long)]
-    is_uncompress: bool,
+    pub is_uncompress: bool,
+
+    /// compression algorithms; separate by spaces if pipelining compressors
+    #[clap(short, long)]
+    pub compressors: Compressors
+}
+
+pub struct Compressors(pub Vec<Box<dyn compressor::Compressor>>);
+
+impl std::str::FromStr for Compressors {
+    type Err = clap::error::Error;
+
+    fn from_str(inputs: &str) -> Result<Self, Self::Err> {
+        let mut compressors: Vec<Box<dyn compressor::Compressor>> = vec![];
+        
+        for input in inputs.split(',') {
+            match input {
+                "huffman" | "hfm" => {
+                    compressors.push(Box::new(compressor::huffman::HuffmanCompressor))
+                },
+                "lz77" | "z7" => {
+                    compressors.push(Box::new(compressor::lz77::Lz77Compressor)) 
+                },
+                _ => {
+                    return Err(
+                        clap::error::Error::raw(
+                            clap::error::ErrorKind::InvalidValue,
+                            format!("compressor {} has not been supported yet!", &input)
+                        )
+                    )
+                }
+            }
+        }
+
+        Ok(Compressors(compressors))
+    }
 }
