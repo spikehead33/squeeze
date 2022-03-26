@@ -20,7 +20,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
 
         match args.is_uncompress {
             true => ou_base_name.set_extension(""),
-            false => ou_base_name.set_extension(".sq")
+            false => ou_base_name.set_extension("sq")
         };
 
         ou_base_name
@@ -33,9 +33,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
 
     let cli::Compressors(compressors) = args.compressors;
 
-    let result = compressors.iter().try_fold(symbols, |input_stream, compressor| {
-        compressor.compress(input_stream.as_slice())
-    });
+    let result = match args.is_uncompress {
+        false => compressors.iter().try_fold(symbols, |input_stream, compressor| {
+            compressor.compress(input_stream.as_slice())
+        }),
+        true => compressors.iter().rev().try_fold(symbols, |input_stream, compressor| {
+            compressor.uncompress(input_stream.as_slice())
+        }),
+    };
 
     match result {
         Ok(data) => {
