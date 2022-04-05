@@ -12,5 +12,5 @@ The file layout is as follow:<br><br>
 |3-cb_size*2|codebook|HashMap<u8,u8>|pair of symbol and codeword mapping
 |rest|compressed_content|Vec<u8>|The compressed contents
 
-The maximum possible size of the compressed file is 1+2+(256*2) = 515
+The maximum possible size of the compressed file header is 1+2+(256*2) = 515
 <h1> Lz77Compressor</h1>
