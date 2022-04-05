@@ -15,8 +15,7 @@ fn text_compression_test() {
 
     assert_eq!(
         data,
-        huffman
-            .uncompress(huffman.compress(&data).as_ref().unwrap())
-            .unwrap()
+        huffman.uncompress(huffman.compress(&data).as_ref().unwrap())
+               .unwrap()
     );
 }

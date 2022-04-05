@@ -95,7 +95,7 @@ impl Compressor for HuffmanCompressor {
         let mut code_length_table = HashMap::new();
         for chunk in &input
             .into_iter()
-            .skip(1 + 2)
+            .skip(3)
             .take(cb_size as usize)
             .chunks(2)
         {
@@ -109,12 +109,11 @@ impl Compressor for HuffmanCompressor {
         let rcb = RevCodeBook::from(&cb);
 
         let mut payload = BitVec::from_bytes(
-            input
-                .iter()
-                .skip(1 + 2 + cb_size as usize)
-                .copied()
-                .collect::<Vec<_>>()
-                .as_slice(),
+            input.iter()
+                 .skip(1 + 2 + cb_size as usize)
+                 .copied()
+                 .collect::<Vec<_>>()
+                 .as_slice(),
         );
 
         // need to remove the padding bits on the payload before
