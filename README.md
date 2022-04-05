@@ -9,8 +9,8 @@ The file layout is as follow:<br><br>
 |---|---|---|---|
 |0|npad|u8|The number of padding bits at the end
 |1-2|cb_size|u16|The codebook size (byte 1 and byte 2 combine to form cb_size, a u16 variable)
-|3..cb_size*2|codebook|(u8,u8)|pair of symbol and codeword mapping
-|rest|compressed_content|[u8]|The compressed contents
+|3-cb_size*2|codebook|HashMap<u8,u8>|pair of symbol and codeword mapping
+|rest|compressed_content|Vec<u8>|The compressed contents
 
 The maximum possible size of the compressed file is 1+2+(256*2) = 515
 <h1> Lz77Compressor</h1>
