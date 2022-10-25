@@ -1,6 +1,26 @@
 <h1>Overview</h1>
 Squeeze is a Compression command-line utility and library written in Rust<br><br>
 
+<h1>Demo</h1>
+
+```
+$ squeeze --help
+
+squeeze 0.1.0
+
+USAGE:
+    squeeze [OPTIONS] --input <INPUT> --compressors <COMPRESSORS>
+
+OPTIONS:
+    -c, --compressors <COMPRESSORS>    compression algorithms; separate by spaces if pipelining
+                                       compressors
+    -h, --help                         Print help information
+    -i, --input <INPUT>                input file path
+    -o, --output <OUTPUT>              input file path
+    -u, --is-uncompress                uncompress mode
+    -V, --version                      Print version information
+```
+
 <h1> HuffmanCompressor</h1>
 HuffmanCompressor is a canonical huffman encoder/decoder.<br>
 The file layout is as follow:<br><br>
