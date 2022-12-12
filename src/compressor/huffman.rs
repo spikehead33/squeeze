@@ -44,12 +44,11 @@ fn code_length_table(input: &[RawSymbol]) -> Result<CodeLengthTable, CompressorR
 
 /// Use the CodeBook to compress the input content
 fn apply_codebook(input: &[RawSymbol], cb: &CodeBook) -> BitVec {
-    let mut bitvec = BitVec::new();
-    input
-        .iter()
-        .map(|symbol| cb.0.get(symbol).unwrap().clone())
-        .for_each(|mut bv| bitvec.append(&mut bv));
-    bitvec
+    BitVec::from_iter(
+        input.iter()
+             .map(|symbol| cb.0.get(symbol).unwrap().clone())
+             .flatten()
+    )
 }
 
 /// cb_size: CodeBook Size number of bytes
