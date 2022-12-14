@@ -6,7 +6,7 @@ pub trait Compressor {
     fn compress(&self, input: &[u8])
         -> Result<Vec<u8>, CompressorRuntimeError>;
 
-    fn uncompress(&self, input: &[u8])
+    fn decompress(&self, input: &[u8])
         -> Result<Vec<u8>, CompressorRuntimeError>;
 }
 

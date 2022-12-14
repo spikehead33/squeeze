@@ -77,7 +77,7 @@ impl Compressor for HuffmanCompressor {
             .collect())
     }
 
-    fn uncompress(&self, input: &[EncodedSymbol]) -> Result<Vec<RawSymbol>, CompressorRuntimeError> {
+    fn decompress(&self, input: &[EncodedSymbol]) -> Result<Vec<RawSymbol>, CompressorRuntimeError> {
         let mut npad: u8 = 0;
         let mut cb_size: u16 = 0;
 

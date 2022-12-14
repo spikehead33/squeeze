@@ -13,9 +13,9 @@ pub struct Cli {
     #[clap(parse(from_os_str))]
     pub output: Option<std::path::PathBuf>,
 
-    /// uncompress mode
+    /// decompress mode
     #[clap(short = 'u', long)]
-    pub is_uncompress: bool,
+    pub decompress: bool,
 
     /// compression algorithms; separate by spaces if pipelining compressors
     #[clap(short, long)]
@@ -32,12 +32,8 @@ impl std::str::FromStr for Compressors {
         
         for input in inputs.split(',') {
             match input {
-                "huffman" | "hfm" => {
-                    compressors.push(Box::new(compressor::huffman::HuffmanCompressor))
-                },
-                "lz77" | "z7" => {
-                    compressors.push(Box::new(compressor::lz77::Lz77Compressor)) 
-                },
+                "huffman" | "hfm" => compressors.push(Box::new(compressor::huffman::HuffmanCompressor)),
+                "lz77" | "z7" => compressors.push(Box::new(compressor::lz77::Lz77Compressor)),
                 _ => {
                     return Err(
                         clap::error::Error::raw(
