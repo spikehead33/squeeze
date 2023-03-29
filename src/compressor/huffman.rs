@@ -45,9 +45,10 @@ fn code_length_table(input: &[RawSymbol]) -> Result<CodeLengthTable, CompressorR
 /// Use the CodeBook to compress the input content
 fn apply_codebook(input: &[RawSymbol], cb: &CodeBook) -> BitVec {
     BitVec::from_iter(
-        input.iter()
-             .map(|symbol| cb.0.get(symbol).unwrap().clone())
-             .flatten()
+        input
+            .iter()
+            .map(|symbol| cb.0.get(symbol).unwrap().clone())
+            .flatten(),
     )
 }
 
@@ -77,7 +78,10 @@ impl Compressor for HuffmanCompressor {
             .collect())
     }
 
-    fn decompress(&self, input: &[EncodedSymbol]) -> Result<Vec<RawSymbol>, CompressorRuntimeError> {
+    fn decompress(
+        &self,
+        input: &[EncodedSymbol],
+    ) -> Result<Vec<RawSymbol>, CompressorRuntimeError> {
         let mut npad: u8 = 0;
         let mut cb_size: u16 = 0;
 
@@ -92,12 +96,7 @@ impl Compressor for HuffmanCompressor {
 
         // This part construct the code-length-table
         let mut code_length_table = HashMap::new();
-        for chunk in &input
-            .into_iter()
-            .skip(3)
-            .take(cb_size as usize)
-            .chunks(2)
-        {
+        for chunk in &input.into_iter().skip(3).take(cb_size as usize).chunks(2) {
             if let &[&symbol, &code_length] = chunk.collect::<Vec<_>>().as_slice() {
                 code_length_table.insert(symbol, code_length);
             };
@@ -108,11 +107,12 @@ impl Compressor for HuffmanCompressor {
         let rcb = RevCodeBook::from(&cb);
 
         let mut payload = BitVec::from_bytes(
-            input.iter()
-                 .skip(1 + 2 + cb_size as usize)
-                 .copied()
-                 .collect::<Vec<_>>()
-                 .as_slice(),
+            input
+                .iter()
+                .skip(1 + 2 + cb_size as usize)
+                .copied()
+                .collect::<Vec<_>>()
+                .as_slice(),
         );
 
         // need to remove the padding bits on the payload before
@@ -153,7 +153,9 @@ impl TryFrom<&[RawSymbol]> for SymbolFrequencyTable {
         }
 
         if table.is_empty() {
-            return Err(CompressorRuntimeError(String::from("HuffmanCompressorError: no symbols in the SFT")));
+            return Err(CompressorRuntimeError(String::from(
+                "HuffmanCompressorError: no symbols in the SFT",
+            )));
         }
 
         Ok(SymbolFrequencyTable(table))
@@ -174,13 +176,13 @@ impl TryFrom<SymbolFrequencyTable> for HuffmanTree {
         }
 
         while heap.len() > 1 {
-            let Reverse(smaller) = heap.pop().ok_or_else(
-                || CompressorRuntimeError(String::from(""))
-            )?;
+            let Reverse(smaller) = heap
+                .pop()
+                .ok_or_else(|| CompressorRuntimeError(String::from("")))?;
 
-            let Reverse(bigger) = heap.pop().ok_or_else(
-                || CompressorRuntimeError(String::from(""))
-            )?;
+            let Reverse(bigger) = heap
+                .pop()
+                .ok_or_else(|| CompressorRuntimeError(String::from("")))?;
 
             heap.push(Reverse(HuffmanTree::Tree(
                 smaller.frequency() + bigger.frequency(),
@@ -189,9 +191,9 @@ impl TryFrom<SymbolFrequencyTable> for HuffmanTree {
             )));
         }
 
-        let Reverse(tree) = heap.pop().ok_or_else(
-            || CompressorRuntimeError(String::from(""))
-        )?;
+        let Reverse(tree) = heap
+            .pop()
+            .ok_or_else(|| CompressorRuntimeError(String::from("")))?;
 
         Ok(tree)
     }

@@ -19,32 +19,32 @@ pub struct Cli {
 
     /// compression algorithms; separate by spaces if pipelining compressors
     #[clap(short, long)]
-    pub compressors: Compressors
+    pub compressors: CompressorOptions,
 }
 
-pub struct Compressors(pub Vec<Box<dyn compressor::Compressor>>);
+pub struct CompressorOptions(pub Vec<Box<dyn compressor::Compressor>>);
 
-impl std::str::FromStr for Compressors {
+impl std::str::FromStr for CompressorOptions {
     type Err = clap::error::Error;
 
     fn from_str(inputs: &str) -> Result<Self, Self::Err> {
         let mut compressors: Vec<Box<dyn compressor::Compressor>> = vec![];
-        
+
         for input in inputs.split(',') {
             match input {
-                "huffman" | "hfm" => compressors.push(Box::new(compressor::huffman::HuffmanCompressor)),
+                "huffman" | "hfm" => {
+                    compressors.push(Box::new(compressor::huffman::HuffmanCompressor))
+                }
                 "lz77" | "z7" => compressors.push(Box::new(compressor::lz77::Lz77Compressor)),
                 _ => {
-                    return Err(
-                        clap::error::Error::raw(
-                            clap::error::ErrorKind::InvalidValue,
-                            format!("compressor {} has not been supported yet!", &input)
-                        )
-                    )
+                    return Err(clap::error::Error::raw(
+                        clap::error::ErrorKind::InvalidValue,
+                        format!("compressor {} has not been supported yet!", &input),
+                    ))
                 }
             }
         }
 
-        Ok(Compressors(compressors))
+        Ok(CompressorOptions(compressors))
     }
 }
